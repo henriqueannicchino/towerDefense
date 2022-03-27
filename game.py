@@ -1,4 +1,4 @@
-#continue from 01:02:00
+#continue from 02:05:30
 import pygame
 import os
 from enemies.scorpion import Scorpion
@@ -34,7 +34,7 @@ class Game:
             # loop through enemies
             to_del = []
             for en in self.enemys:
-                if en.x < -5:
+                if en.x < -15:
                     to_del.append(en)
 
             # delete all enemies off the screen
