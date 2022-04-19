@@ -1,4 +1,4 @@
-#continue from 05:06:30
+#continue from 06:07:28
 import pygame
 import os
 from enemies.scorpion import Scorpion
@@ -12,7 +12,6 @@ pygame.font.init()
 
 lives_img = pygame.image.load(os.path.join("game_assets","heart.png"))
 star_img = pygame.image.load(os.path.join("game_assets/menu","star.png"))
-
 
 class Game:
     def __init__(self):
@@ -46,20 +45,26 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     #look if you clicked on attack tower
-                    for tw in self.attack_towers:
-                        if tw.click(pos[0], pos[1]):
-                            tw.selected = True
-                            self.selected_tower = tw
-                        else:
-                            tw.selected = False
-                    
-                    #look if you clicked on support tower
-                    for tw in self.support_towers:
-                        if tw.click(pos[0], pos[1]):
-                            tw.selected = True
-                            self.selected_tower = tw
-                        else:
-                            tw.selected = False
+                    btn_clicked = None
+                    if self.selected_tower:
+                        btn_clicked = self.selected_tower.menu.get_clicked(pos[0], pos[1])
+                        if btn_clicked:
+                            self.selected_tower.upgrade()
+                    if not(btn_clicked):
+                        for tw in self.attack_towers:
+                            if tw.click(pos[0], pos[1]):
+                                tw.selected = True
+                                self.selected_tower = tw
+                            else:
+                                tw.selected = False
+                        
+                        #look if you clicked on support tower
+                        for tw in self.support_towers:
+                            if tw.click(pos[0], pos[1]):
+                                tw.selected = True
+                                self.selected_tower = tw
+                            else:
+                                tw.selected = False
                     
             # loop through enemies
             to_del = []
