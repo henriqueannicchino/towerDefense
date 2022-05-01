@@ -73,7 +73,6 @@ class Tower:
         upgrades the tower for a given cost
         :return: None
         """
-        #print(self.level, len(self.tower_imgs))
         if self.level < len(self.tower_imgs):
             self.level += 1
             self.damage += 1
@@ -85,11 +84,19 @@ class Tower:
         """
         return self.price[self.level-1]
 
-
-
     def move(self, x, y):
+        """
+        moves tower to given x and y
+        :param x: int
+        :param y: int
+        :return: None
+        """
         self.x = x
         self.y = y
+        self.menu.x = x
+        self.menu.y = y
+        self.menu.update()
+        
 
 
     

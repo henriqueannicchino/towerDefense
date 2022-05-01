@@ -2,7 +2,6 @@ import pygame
 from .tower import Tower
 import os
 import math
-import time
 from menu.menu import Menu
 
 
@@ -38,18 +37,29 @@ class ArcherTowerLong(Tower):
         self.damage = 1
         self.original_damage = self.damage
         self.width = self.height = 90
+        self.moving = False
+        self.name = "archer"
 
         self.menu = Menu(self, self.x, self.y, menu_bg, [2000, "MAX"])
         self.menu.add_btn(upgrade_btn, "Upgrade")
 
     def get_upgrade_cost(self):
+        """
+        gets the upgrade cost
+        :return: int
+        """
         return self.menu.get_item_cost()
 
     def draw(self, win):
+        """
+        draw the archer tower and animated archer
+        :param win: surface
+        :return: int
+        """
         super().draw_radius(win)
         super().draw(win)
 
-        if self.inRange:
+        if self.inRange and not self.moving:
             self.archer_count += 1
             if self.archer_count >= len(self.archer_imgs)*10:
                 self.archer_count = 0
@@ -77,7 +87,7 @@ class ArcherTowerLong(Tower):
         :param enemies: list of enemies
         :return: None
         """
-        money =0
+        money = 0
         self.inRange = False
         enemy_closest = []
         for enemy in enemies:
@@ -92,7 +102,7 @@ class ArcherTowerLong(Tower):
         enemy_closest.sort(key=lambda x: x.x)
         if len(enemy_closest) > 0:
             first_enemy = enemy_closest[0]
-            if self.archer_count == 6:
+            if self.archer_count == 40:
                 if first_enemy.hit(self.damage) == True:
                     money = first_enemy.money
                     enemies.remove(first_enemy)
@@ -134,6 +144,8 @@ class ArcherTowerShort(ArcherTowerLong):
         self.left = True
         self.damage = 2
         self.original_damage = self.damage
+        
         self.menu = Menu(self, self.x, self.y, menu_bg, [2500, 5500, "MAX"])
         self.menu.add_btn(upgrade_btn, "Upgrade")
+        self.name = "archer2"
         
