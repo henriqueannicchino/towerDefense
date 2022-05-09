@@ -54,9 +54,9 @@ class DamageTower(RangeTower):
     """
     def __init__(self, x, y):
         super().__init__(x,y)
-        self.range = 75
-        self.effect = [0.2, 0.4]
+        self.range = 100
         self.tower_imgs = damage_imgs[:]
+        self.effect = [0.5, 1]
         self.name = "damage"
 
     def support(self, towers):

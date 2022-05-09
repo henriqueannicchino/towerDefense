@@ -1,6 +1,7 @@
-#continue from 08:40:25
+#continue from 10:31:10
 import pygame
 import os
+import math
 from enemies.scorpion import Scorpion
 from enemies.club import Club
 from enemies.wizard import Wizard
@@ -9,7 +10,11 @@ from towers.supportTower import DamageTower, RangeTower
 from menu.menu import VerticalMenu, PlayPauseButton
 import time
 import random
+import numpy as np
+import matplotlib.pyplot as plt
 pygame.font.init()
+
+path = [(-10, 234), (19, 234), (177, 235), (282, 293), (526, 290), (607, 217), (641, 105), (717, 57), (796, 83), (855, 222), (973, 284), (1046, 366), (1040, 458), (894, 492), (740, 504), (580, 542), (148, 541), (10, 442), (-20, 335), (-75, 305), (-100, 345)]
 
 lives_img = pygame.image.load(os.path.join("game_assets","heart.png"))
 star_img = pygame.image.load(os.path.join("game_assets/menu","star.png"))
@@ -48,10 +53,10 @@ waves = [
 ]
 
 class Game:
-    def __init__(self):
+    def __init__(self, win):
         self.width = 1350
         self.height = 700
-        self.win = pygame.display.set_mode((self.width, self.height))
+        self.win = win
         self.enemys = []
         self.attack_towers = []
         self.support_towers = []
@@ -109,6 +114,17 @@ class Game:
             #check for moving object
             if self.moving_object:
                 self.moving_object.move(pos[0], pos[1])
+                tower_list = self.attack_towers[:] + self.support_towers[:]
+                collide = False
+                for tower in tower_list:
+                    if tower.collide(self.moving_object):
+                        collide = True
+                        tower.place_color = (255,0,0,100)
+                        self.moving_object.place_color = (255,0,0,100)
+                    else:
+                        tower.place_color = (0,255,0,100)
+                        if not collide:
+                            self.moving_object.place_color = (0,255,0,100)
 
             #main event loop
             for event in pygame.event.get():
@@ -119,14 +135,20 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     #if you're moving an object and click
                     if self.moving_object:
-                        
-                        if self.moving_object.name in attack_tower_names:
-                            self.attack_towers.append(self.moving_object)
-                        elif self.moving_object.name in support_tower_names:
-                            self.support_towers.append(self.moving_object)
+                        not_allowed =  False
+                        tower_list = self.attack_towers[:] + self.support_towers[:]
+                        for tower in tower_list:
+                            if tower.collide(self.moving_object):
+                                not_allowed = True
 
-                        self.moving_object.moving = False
-                        self.moving_object = None
+                        if not not_allowed and self.point_to_line(self.moving_object):
+                            if self.moving_object.name in attack_tower_names:
+                                self.attack_towers.append(self.moving_object)
+                            elif self.moving_object.name in support_tower_names:
+                                self.support_towers.append(self.moving_object)
+
+                            self.moving_object.moving = False
+                            self.moving_object = None
                             
                     else:
                         #check for play or pause
@@ -199,8 +221,48 @@ class Game:
 
         pygame.quit()
 
+    def point_to_line(self, tower):
+        """
+        returns if you can place tower based on distance from path
+        :param tower: Tower
+        :return: Bool
+        """
+        #find two closest points
+        """
+        closest = []
+        for point in path:
+            dis = math.sqrt((tower.x - point[0])**2 + (tower.y - point[1])**2)
+            closest.append([dis, point])
+
+        closest.sort(key=lambda x: x[0])
+
+        x = closest[0][1]
+        y = closest[1][1]
+
+        #Calculate the coefficients. This line answers the initial question.
+        coefficients = np.polyfit(x, y, 1)
+
+        a = coefficients[0]
+        b = coefficients[1]
+
+        c = a*x[0] + b*x[1]
+
+        dis = abs((a * x[0] + b * x[1])) / (math.sqrt((a**2) + (b**2))
+        """
+        return True
+
     def draw(self):
         self.win.blit(self.bg, (0,0))
+
+        #draw placement rings
+        if self.moving_object:
+            for tower in self.attack_towers:
+                tower.draw_placement(self.win)
+
+            for tower in self.support_towers:
+                tower.draw_placement(self.win)
+
+            self.moving_object.draw_placement(self.win)
 
         # draw attack_towers
         for tw in self.attack_towers:
@@ -214,9 +276,13 @@ class Game:
         for en in self.enemys:
             en.draw(self.win)
 
+        #redraw selected tower
+        if self.selected_tower:
+            self.selected_tower.draw(self.win)
+        
         #draw moving object
         if self.moving_object:
-            self.moving_object.draw(self.win)        
+            self.moving_object.draw(self.win)
 
         #draw menu
         self.menu.draw(self.win)
@@ -259,6 +325,7 @@ class Game:
         except Exception as e:
             print(str(e) + "NOT VALID NAME")
 
-g = Game()
+win = pygame.display.set_mode((1350, 700))
+g = Game(win)
 g.run()
 

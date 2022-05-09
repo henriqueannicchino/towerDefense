@@ -104,7 +104,7 @@ class ArcherTowerLong(Tower):
             first_enemy = enemy_closest[0]
             if self.archer_count == 40:
                 if first_enemy.hit(self.damage) == True:
-                    money = first_enemy.money
+                    money = first_enemy.money * 2
                     enemies.remove(first_enemy)
                 
             if first_enemy.x > self.x and not(self.left):
@@ -138,7 +138,7 @@ class ArcherTowerShort(ArcherTowerLong):
         self.tower_imgs = tower_imgs[:]
         self.archer_imgs = archer_imgs[:]
         self.archer_count = 0
-        self.range = 100
+        self.range = 120
         self.original_range = self.range
         self.inRange = False
         self.left = True
