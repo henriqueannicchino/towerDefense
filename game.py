@@ -1,4 +1,4 @@
-#continue from 10:31:10
+#continue from 10:46:10
 import pygame
 import os
 import math
@@ -13,6 +13,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 pygame.font.init()
+pygame.init()
 
 path = [(-10, 234), (19, 234), (177, 235), (282, 293), (526, 290), (607, 217), (641, 105), (717, 57), (796, 83), (855, 222), (973, 284), (1046, 366), (1040, 458), (894, 492), (740, 504), (580, 542), (148, 541), (10, 442), (-20, 335), (-75, 305), (-100, 345)]
 
@@ -28,10 +29,16 @@ buy_range = pygame.transform.scale(pygame.image.load(os.path.join("game_assets",
 play_btn = pygame.transform.scale(pygame.image.load(os.path.join("game_assets/menu","button_play.png")), (75, 75))
 pause_btn = pygame.transform.scale(pygame.image.load(os.path.join("game_assets/menu","button_pause.png")), (75, 75))
 
+sound_btn = pygame.transform.scale(pygame.image.load(os.path.join("game_assets","button_sound.png")), (75, 75))
+sound_btn_off = pygame.transform.scale(pygame.image.load(os.path.join("game_assets","button_sound_off.png")), (75, 75))
+
 wave_bg = pygame.transform.scale(pygame.image.load(os.path.join("game_assets/menu","menu.png")), (225, 70))
 
 attack_tower_names = ["archer", "archer2"]
 support_tower_names = ["range", "damage"]
+
+#load music
+pygame.mixer.music.load(os.path.join("game_assets", "music.mp3"))
 
 #waves are in form
 #frequency of enemies
@@ -76,7 +83,9 @@ class Game:
         self.wave = 0
         self.current_wave = waves[self.wave][:]
         self.pause = True
+        self.music_on = True
         self.playPauseButton = PlayPauseButton(play_btn, pause_btn, 10, self.height - 85)
+        self.soundButton = PlayPauseButton(sound_btn, sound_btn_off, 90, self.height - 85)
 
     def gen_enemies(self):
         """
@@ -98,6 +107,7 @@ class Game:
                     break
         
     def run(self):
+        pygame.mixer.music.play(1)
         run = True
         clock = pygame.time.Clock()
         while run:
@@ -155,6 +165,14 @@ class Game:
                         if self.playPauseButton.click(pos[0], pos[1]):
                             self.pause = not(self.pause)
                             self.playPauseButton.paused = self.pause
+
+                        if self.soundButton.click(pos[0], pos[1]):
+                            self.music_on = not(self.music_on)
+                            self.soundButton.paused = self.music_on
+                            if self.music_on:
+                                pygame.mixer.music.unpause()
+                            else:
+                                pygame.mixer.music.pause()
                         
                         #look if you click on side menu
                         side_menu_button = self.menu.get_clicked(pos[0], pos[1])
@@ -289,6 +307,9 @@ class Game:
 
         #draw play and pause buttons
         self.playPauseButton.draw(self.win)
+
+        #draw music toggle button
+        self.soundButton.draw(self.win)
 
         #draw lives
         text = self.life_font.render(str(self.lives), 1, (255,255,255))
