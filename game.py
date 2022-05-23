@@ -1,7 +1,6 @@
-#continue from 10:46:10
+#continue from 11:28:00
 import pygame
 import os
-import math
 from enemies.scorpion import Scorpion
 from enemies.club import Club
 from enemies.wizard import Wizard
@@ -10,8 +9,6 @@ from towers.supportTower import DamageTower, RangeTower
 from menu.menu import VerticalMenu, PlayPauseButton
 import time
 import random
-import numpy as np
-import matplotlib.pyplot as plt
 pygame.font.init()
 pygame.init()
 
@@ -107,7 +104,7 @@ class Game:
                     break
         
     def run(self):
-        pygame.mixer.music.play(1)
+        pygame.mixer.music.play(loops=-1)
         run = True
         clock = pygame.time.Clock()
         while run:
@@ -115,7 +112,7 @@ class Game:
 
             if self.pause ==  False:
                 #gen monsters
-                if time.time() - self.timer >= random.randrange(1,5)/2:
+                if time.time() - self.timer >= random.randrange(1,6)/3:
                     self.timer = time.time()
                     self.gen_enemies()
 
@@ -237,8 +234,6 @@ class Game:
             self.draw()
 
 
-        pygame.quit()
-
     def point_to_line(self, tower):
         """
         returns if you can place tower based on distance from path
@@ -345,8 +340,4 @@ class Game:
             obj.moving = True
         except Exception as e:
             print(str(e) + "NOT VALID NAME")
-
-win = pygame.display.set_mode((1350, 700))
-g = Game(win)
-g.run()
 

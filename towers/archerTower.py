@@ -99,7 +99,8 @@ class ArcherTowerLong(Tower):
                 self.inRange = True
                 enemy_closest.append(enemy)
 
-        enemy_closest.sort(key=lambda x: x.x)
+        enemy_closest.sort(key=lambda x: x.path_pos)
+        enemy_closest = enemy_closest[::-1]
         if len(enemy_closest) > 0:
             first_enemy = enemy_closest[0]
             if self.archer_count == 40:
