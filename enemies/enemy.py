@@ -1,6 +1,6 @@
 import pygame
 import math
-
+import os
 
 class Enemy:
     def __init__(self):
@@ -12,7 +12,7 @@ class Enemy:
         self.path = [(-10, 234), (19, 234), (177, 235), (282, 293), (526, 290), (607, 217), (641, 105), (717, 57), (796, 83), (855, 222), (973, 284), (1046, 366), (1040, 458), (894, 492), (740, 504), (580, 542), (148, 541), (10, 442), (-20, 335), (-75, 305), (-100, 345)]
         self.x = self.path[0][0]
         self.y = self.path[0][1]
-        self.img = None
+        self.img = pygame.image.load(os.path.join("game_assets/enemies/1", "1_enemies_1_run_000.png"))
         self.dis = 0
         self.path_pos = 0
         self.move_count = 0
@@ -20,6 +20,7 @@ class Enemy:
         self.imgs = []
         self.flipped = False
         self.max_health = 0
+        self.speed_increase = 1.2
 
     def draw(self, win):
         """
@@ -39,8 +40,8 @@ class Enemy:
         :return: None
         """
         length = 50
-        move_by = round(length / self.max_health)
-        health_bar = move_by * self.health
+        move_by = length / self.max_health
+        health_bar = round(move_by * self.health)
 
         pygame.draw.rect(win, (255,0,0), (self.x-40, self.y-75, length, 10), 0)
         pygame.draw.rect(win, (0,255,0), (self.x-40, self.y-75, health_bar, 10), 0)
@@ -77,7 +78,7 @@ class Enemy:
         
         dirn = ((x2-x1)*2, (y2-y1)*2)
         length = math.sqrt((dirn[0])**2 + (dirn[1])**2)
-        dirn = (dirn[0]/length, dirn[1]/length)
+        dirn = (dirn[0]/length * self.speed_increase, dirn[1]/length * self.speed_increase)
 
         if dirn[0] < 0 and not(self.flipped):
             self.flipped = True

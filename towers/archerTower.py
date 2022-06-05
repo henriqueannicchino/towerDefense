@@ -94,7 +94,7 @@ class ArcherTowerLong(Tower):
             x = enemy.x
             y = enemy.y
 
-            dis = math.sqrt((self.x - x)**2 + (self.y - y)**2)
+            dis = math.sqrt((self.x - enemy.img.get_width()/2 - x)**2 + (self.y - enemy.img.get_height()/2 - y)**2)
             if dis < self.range:
                 self.inRange = True
                 enemy_closest.append(enemy)

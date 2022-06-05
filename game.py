@@ -1,9 +1,9 @@
-#continue from 11:28:00
 import pygame
 import os
 from enemies.scorpion import Scorpion
 from enemies.club import Club
 from enemies.wizard import Wizard
+from enemies.minotaur import Minotaur
 from towers.archerTower import ArcherTowerLong, ArcherTowerShort
 from towers.supportTower import DamageTower, RangeTower
 from menu.menu import VerticalMenu, PlayPauseButton
@@ -39,18 +39,18 @@ pygame.mixer.music.load(os.path.join("game_assets", "music.mp3"))
 
 #waves are in form
 #frequency of enemies
-#(#scorpions, #wizards, #clubs)
+#(#scorpions, #wizards, #clubs, #Minotaur)
 waves = [
     [20, 0, 0],
     [50, 0, 0],
     [100, 0, 0],
     [0, 20, 0],
-    [0, 50, 0],
+    [0, 50, 0, 1],
     [0, 100, 0],
     [20, 100, 0],
     [50, 100, 0],
     [100, 100, 0],
-    [0, 0, 50],
+    [0, 0, 50, 3],
     [20, 0, 100],
     [20, 0, 150],
     [200, 100, 200],
@@ -96,7 +96,7 @@ class Game:
                 self.pause = True
                 self.playPauseButton.paused = self.pause
         else:
-            wave_enemies = [Scorpion(), Wizard(), Club()]
+            wave_enemies = [Scorpion(), Wizard(), Club(), Minotaur()]
             for x in range(len(self.current_wave)):
                 if self.current_wave[x] != 0:
                     self.enemys.append(wave_enemies[x])
