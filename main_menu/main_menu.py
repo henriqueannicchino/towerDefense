@@ -1,4 +1,6 @@
-import pygame
+import pip
+try: import pygame
+except: pip.main(['install', 'pygame']); import pygame
 from game import Game
 import os
 
@@ -13,7 +15,7 @@ class MainMenu:
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
         self.win = pygame.display.set_mode((self.width, self.height))
         self.btn = (self.width/2 - play_btn.get_width()/2, self.height/2 - play_btn.get_height()/2, play_btn.get_width(), play_btn.get_height())
-        
+          
     def run(self):
         run = True
 
