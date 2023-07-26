@@ -1,0 +1,14 @@
+# Publishers
+ - [ ] XBox PC 
+    - [ ] Enviado
+		   - Erro na interface do site
+ - [ ] Steam
+    - [ ] Enviado
+		   - Erro na interface do site
+ - [ ] Epic Games Store
+    - [ ] Pagar taxa 100$
+    - [ ] Enviado
+ - [ ] Nuuvem
+    - [x] Enviado form
+ - [ ] GOG
+    - [x] Enviado form
